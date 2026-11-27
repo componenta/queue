@@ -1,0 +1,46 @@
+{
+    "php": "8.5.13",
+    "extraBorrowedServices": 100,
+    "samples": [
+        {
+            "completed": 200,
+            "liveBytes": 4878616,
+            "allocatedBytes": 10485760
+        },
+        {
+            "completed": 2200,
+            "liveBytes": 4879208,
+            "allocatedBytes": 10485760,
+            "blockPeakBytes": 8918576,
+            "gcCollectedAtBoundary": 8308
+        },
+        {
+            "completed": 4200,
+            "liveBytes": 4879584,
+            "allocatedBytes": 10485760,
+            "blockPeakBytes": 8918952,
+            "gcCollectedAtBoundary": 8308
+        },
+        {
+            "completed": 6200,
+            "liveBytes": 4879960,
+            "allocatedBytes": 10485760,
+            "blockPeakBytes": 8919328,
+            "gcCollectedAtBoundary": 8308
+        },
+        {
+            "completed": 8200,
+            "liveBytes": 4880336,
+            "allocatedBytes": 10485760,
+            "blockPeakBytes": 8919704,
+            "gcCollectedAtBoundary": 8308
+        },
+        {
+            "completed": 10200,
+            "liveBytes": 4880712,
+            "allocatedBytes": 10485760,
+            "blockPeakBytes": 8920080,
+            "gcCollectedAtBoundary": 8308
+        }
+    ]
+}

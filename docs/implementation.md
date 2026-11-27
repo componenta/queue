@@ -48,12 +48,20 @@ queue worker or transport state machine.
 | Suite | Tests | Assertions | Main coverage |
 | --- | --- | --- | --- |
 | Core / in-memory / portable memory contract | 247 | 590 | Wire validation, retry decisions, ownership and atomic failure maintenance |
-| queue-cycle | 62 | 287 | Real PostgreSQL transactions, locks, process death, commit uncertainty, DateStyle, exact failure identity and capability ownership |
-| queue-console | 51 | 221 | Lazy commands, limits, failure administration, actual process signals, application events and strict output identity |
+| queue-cycle | 70 | 332 | Real PostgreSQL transactions, locks, process death, commit uncertainty, schema installation, cleanup, exact failure identity and capability ownership |
+| queue-console | 60 | 256 | Lazy commands, limits, failure administration, actual process signals, application events and exact opaque identity |
 | queue-app | 29 | 71 | Real App build/runtime maps, DI scope isolation, cleanup, reference safety and declared runtime aliases |
 | cqrs-queue | 42 | 168 | Real CQRS dispatch, admission, original identity, uncertain publication recovery, preparation failures and synchronous completion |
 | Ecosystem consumer | 4 | 68 | All five packages together on real PostgreSQL, through source and prepared App composition |
-| **Distinct scenarios across suites** | **435** | **1,405** | Repeated platform-matrix runs are not added to this total |
+| **Distinct scenarios across suites** | **452** | **1,485** | Repeated platform-matrix runs are not added to this total |
+
+The [full ecosystem review](full-review.md) records the current architecture,
+security boundaries, local verification and reproducible performance evidence.
+This pass corrected schema installation for semicolons and template markers in
+quoted identifiers, checked confirmed rollback, and added an indexed idle-cleanup
+guard while preserving the original ordered selection and locks. The final guard
+passed the local Cycle suite shown above. PostgreSQL 19 is configured in CI;
+execution on the final published heads is not yet claimed by this snapshot.
 
 The independent review produced additional concrete regressions and fixes:
 

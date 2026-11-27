@@ -1,0 +1,47 @@
+{
+  "date": "2026-11-27",
+  "command": "composer audit --locked --format=json",
+  "phase": "Before adding phpbench to queue-app development dependencies; production graphs unchanged by benchmark packaging",
+  "graphs": {
+    "core": {
+      "advisories": [],
+      "abandoned": {
+        "doctrine/annotations": null
+      },
+      "filter": [],
+      "cooldown": []
+    },
+    "cycle": {
+      "advisories": [],
+      "abandoned": [],
+      "filter": [],
+      "cooldown": []
+    },
+    "console": {
+      "advisories": [],
+      "abandoned": [],
+      "filter": [],
+      "cooldown": []
+    },
+    "cqrs": {
+      "advisories": [],
+      "abandoned": {
+        "doctrine/annotations": null
+      },
+      "filter": [],
+      "cooldown": []
+    },
+    "app": {
+      "advisories": [],
+      "abandoned": [],
+      "filter": [],
+      "cooldown": []
+    },
+    "ecosystem": {
+      "advisories": [],
+      "abandoned": [],
+      "filter": [],
+      "cooldown": []
+    }
+  }
+}

@@ -157,6 +157,7 @@ actual workload.
 | [Behavioral specification](docs/specification.md) | Public contracts, wire format, ownership, outcome and error semantics |
 | [Cycle / PostgreSQL profile](docs/cycle-profile.md) | Durable transitions, strict leases, recovery, retention and staging |
 | [Implementation evidence](docs/implementation.md) | Delivered code, executed tests, measurements and remaining release gates |
+| [Full ecosystem review](docs/full-review.md) | Architecture, stability, security boundaries and measured performance across all five packages |
 | [Verification plan](docs/verification.md) | Traceable core/database scenarios and implementation order |
 | [Componenta integrations](docs/integrations.md) | CQRS, App and Console boundaries and dependency baselines |
 | [Research](docs/research.md) | Source comparison, standards and rationale |
@@ -164,6 +165,13 @@ actual workload.
 Run `composer bench` for local codec, registry, backoff and memory-round-trip
 subjects. These measurements are separate from committed database workloads and
 are not a database throughput claim.
+
+Run `php -d opcache.enable_cli=0 benchmarks/MemoryScaling.php > memory-scaling.json`
+to compare 1,000 and 10,000 completed, delayed and failed in-memory records.
+The standalone workload reports retained heap, empty polls and first/late failure
+pages through the public API. It uses fixed clocks, releases each scenario before
+the next and reports samples without timing thresholds. Lifetime retention is
+intentional; these measurements do not imply durable storage or a production SLA.
 
 ## License
 

@@ -1,0 +1,210 @@
+{
+    "php": "8.5.13",
+    "opcache_enable_cli": "0",
+    "jit": "disable",
+    "payload_bytes": 256,
+    "clock": "frozen",
+    "scope": "Public InMemory API; retention is intentional; no database throughput claim.",
+    "cases": [
+        {
+            "records": 1000,
+            "state": "completed",
+            "retained_heap_bytes": 2523136,
+            "empty_poll": {
+                "unit": "microseconds\/operation",
+                "revolutions": 1000,
+                "iterations": 7,
+                "median": 0.179635,
+                "minimum": 0.161276,
+                "maximum": 0.407733,
+                "samples": [
+                    0.179635,
+                    0.31929,
+                    0.233463,
+                    0.161276,
+                    0.16512100000000002,
+                    0.178696,
+                    0.407733
+                ]
+            }
+        },
+        {
+            "records": 1000,
+            "state": "delayed",
+            "retained_heap_bytes": 2497792,
+            "empty_poll": {
+                "unit": "microseconds\/operation",
+                "revolutions": 1000,
+                "iterations": 7,
+                "median": 20.350899000000002,
+                "minimum": 18.663726,
+                "maximum": 20.948511,
+                "samples": [
+                    20.350899000000002,
+                    20.297010999999998,
+                    19.460811000000003,
+                    18.663726,
+                    20.725047,
+                    20.53865,
+                    20.948511
+                ]
+            }
+        },
+        {
+            "records": 1000,
+            "state": "failed",
+            "retained_heap_bytes": 3819952,
+            "empty_poll": {
+                "unit": "microseconds\/operation",
+                "revolutions": 1000,
+                "iterations": 7,
+                "median": 0.16290000000000002,
+                "minimum": 0.158058,
+                "maximum": 0.353211,
+                "samples": [
+                    0.182923,
+                    0.158058,
+                    0.158973,
+                    0.34087900000000004,
+                    0.353211,
+                    0.16290000000000002,
+                    0.16248500000000002
+                ]
+            },
+            "first_page_10": {
+                "unit": "microseconds\/operation",
+                "revolutions": 100,
+                "iterations": 7,
+                "median": 5.22267,
+                "minimum": 5.02523,
+                "maximum": 6.85834,
+                "samples": [
+                    5.473859999999999,
+                    5.18193,
+                    5.02523,
+                    6.85834,
+                    5.03898,
+                    5.25579,
+                    5.22267
+                ]
+            },
+            "late_page_10": {
+                "unit": "microseconds\/operation",
+                "revolutions": 100,
+                "iterations": 7,
+                "median": 21.4204,
+                "minimum": 18.11434,
+                "maximum": 75.93024000000001,
+                "samples": [
+                    21.64339,
+                    21.4204,
+                    25.25854,
+                    75.93024000000001,
+                    18.83156,
+                    20.345830000000003,
+                    18.11434
+                ]
+            }
+        },
+        {
+            "records": 10000,
+            "state": "completed",
+            "retained_heap_bytes": 26160920,
+            "empty_poll": {
+                "unit": "microseconds\/operation",
+                "revolutions": 1000,
+                "iterations": 7,
+                "median": 0.160505,
+                "minimum": 0.159958,
+                "maximum": 0.184551,
+                "samples": [
+                    0.184551,
+                    0.159958,
+                    0.160403,
+                    0.160505,
+                    0.160656,
+                    0.16016999999999998,
+                    0.182463
+                ]
+            }
+        },
+        {
+            "records": 10000,
+            "state": "delayed",
+            "retained_heap_bytes": 25927992,
+            "empty_poll": {
+                "unit": "microseconds\/operation",
+                "revolutions": 1000,
+                "iterations": 7,
+                "median": 22.517034,
+                "minimum": 21.626448,
+                "maximum": 24.813637999999997,
+                "samples": [
+                    23.671297,
+                    22.517847000000003,
+                    24.813637999999997,
+                    22.486341,
+                    21.742801,
+                    21.626448,
+                    22.517034
+                ]
+            }
+        },
+        {
+            "records": 10000,
+            "state": "failed",
+            "retained_heap_bytes": 37507504,
+            "empty_poll": {
+                "unit": "microseconds\/operation",
+                "revolutions": 1000,
+                "iterations": 7,
+                "median": 0.162909,
+                "minimum": 0.15926300000000002,
+                "maximum": 0.257416,
+                "samples": [
+                    0.166755,
+                    0.161971,
+                    0.162909,
+                    0.257416,
+                    0.17853200000000002,
+                    0.15959399999999999,
+                    0.15926300000000002
+                ]
+            },
+            "first_page_10": {
+                "unit": "microseconds\/operation",
+                "revolutions": 100,
+                "iterations": 7,
+                "median": 5.27942,
+                "minimum": 5.03521,
+                "maximum": 6.716069999999999,
+                "samples": [
+                    6.716069999999999,
+                    5.33481,
+                    5.12376,
+                    5.22099,
+                    5.03521,
+                    5.27942,
+                    5.96905
+                ]
+            },
+            "late_page_10": {
+                "unit": "microseconds\/operation",
+                "revolutions": 100,
+                "iterations": 7,
+                "median": 150.12356,
+                "minimum": 134.84615,
+                "maximum": 186.44385,
+                "samples": [
+                    164.67257,
+                    149.09073,
+                    134.84615,
+                    141.75762,
+                    150.12356,
+                    186.44385,
+                    167.11135000000002
+                ]
+            }
+        }
+    ]
+}

@@ -1,0 +1,54 @@
+{
+    "php": "8.5.13",
+    "opcacheCli": "0",
+    "jit": "disable",
+    "bodyBytes": 256,
+    "messagesPerIteration": 2000,
+    "iterations": 7,
+    "unit": "microseconds per consumed message",
+    "scope": "Local CPU consumption; no database, network or business handler work.",
+    "results": {
+        "core-worker": {
+            "medianMicroseconds": 16.7133635,
+            "minimumMicroseconds": 16.3685255,
+            "maximumMicroseconds": 17.4881725,
+            "samplesMicroseconds": [
+                17.4881725,
+                16.7133635,
+                16.528247500000003,
+                16.991069500000002,
+                16.53073,
+                16.3685255,
+                16.946091499999998
+            ]
+        },
+        "loop-message-limit": {
+            "medianMicroseconds": 16.413373,
+            "minimumMicroseconds": 15.9963125,
+            "maximumMicroseconds": 17.268712,
+            "samplesMicroseconds": [
+                15.9963125,
+                17.268712,
+                16.308098,
+                16.301224,
+                16.413373,
+                16.884949,
+                16.834419
+            ]
+        },
+        "loop-all-limits": {
+            "medianMicroseconds": 16.883172,
+            "minimumMicroseconds": 16.671915000000002,
+            "maximumMicroseconds": 17.581034,
+            "samplesMicroseconds": [
+                17.5380465,
+                16.7245065,
+                16.883172,
+                16.702067500000002,
+                16.671915000000002,
+                17.410324499999998,
+                17.581034
+            ]
+        }
+    }
+}
