@@ -24,10 +24,11 @@ real PostgreSQL state transitions, Console orchestration, CQRS identity and
 per-message cleanup. It contains a separate Composer root, dependency lock and
 reviewed Git commit map; it does not add these integrations to core dependencies.
 
-The current App baseline is the unified build branch at
-[`d2c1a5a`](https://github.com/componenta/app/commit/d2c1a5a0b41a343dcb408e165986203e1179e712),
-with DI [`e4f19ab`](https://github.com/componenta/di/commit/e4f19ab9a9f6bd18da85fc52c8d478433a32baec)
-and Config [`4685e71`](https://github.com/componenta/config/commit/4685e71d86500a7b51f4a773bb3022dd787fba7f).
+The App integration targets the unified App 6 build line with DI 6 and Config 4.
+Its exact reviewed commits are owned by queue-app's
+[dependency references](https://github.com/componenta/queue-app/blob/main/tests/dependency-refs.json)
+and [development guide](https://github.com/componenta/queue-app/blob/main/DEVELOPMENT.md),
+so an upstream update does not leave a competing source pin in this core document.
 The older sources cited in the research section below describe the original
 comparison; current runtime verification uses the package fixtures' exact refs.
 
