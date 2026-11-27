@@ -62,6 +62,23 @@ The final local checks were run independently after PSR-12 formatting:
 | `php examples/basic.php` | Handler ran; final result `acknowledged` |
 | phpbench | Six subjects, zero failures/errors; observed values in the linked baseline |
 
+### Hosted CI confirmation
+
+[GitHub Actions run 46007356923](https://github.com/componenta/queue/actions/runs/46007356923)
+completed successfully for implementation commit
+[`856b2b3`](https://github.com/componenta/queue/commit/856b2b3ee775980a9864e36f6d021e7f88be5a95).
+Job logs, rather than the configured matrix alone, confirmed these results:
+
+| Hosted job | Actual server version from its logs | Observed result |
+| --- | --- | --- |
+| Core | No database | 245 tests / 572 assertions; PHPStan max, PSR-12, Composer validation and example passed |
+| PostgreSQL 16 | **16.16** | 56 tests / 262 assertions passed |
+| PostgreSQL 17 | **17.12** | 56 tests / 262 assertions passed |
+| PostgreSQL 18 | **18.7** | 56 tests / 262 assertions passed |
+
+The jobs used PHP 8.5.13. This documentation update records that completed run;
+it does not change the measured implementation source or dependency lockfile.
+
 The PostgreSQL fixture used isolated schemas and independent physical write
 connections. Process/lock tests used separate PHP processes and explicit
 synchronization. The test-owned process was actually terminated with SIGKILL
@@ -94,8 +111,8 @@ configured database alias/schema/queue; all three review controls passed afterwa
 The source comparison uses `lease_until <= dbNow` for expiry. Exact equality is
 covered by the frozen-clock memory adapter; a live PostgreSQL same-microsecond
 boundary is not claimed as an executed experiment. Local server coverage is
-17.12; 16/18 CI jobs and unsupported PostgreSQL 15/small-block builds are separate
-gates. The workload includes 10,000 delayed records; a large terminal-history
+17.12; hosted CI additionally passed on 16.16 and 18.7. Unsupported PostgreSQL
+15/small-block builds were not executed. The workload includes 10,000 delayed records; a large terminal-history
 benchmark and comparative multi-consumer throughput were not measured.
 
 ## Measurements
@@ -118,10 +135,9 @@ exploratory measurements on a shared host, not production SLOs.
 
 ## Release and integration boundaries
 
-The CI workflow declares PostgreSQL 16, 17 and 18 jobs. A configured job is not
-proof that a hosted CI run succeeded; local PostgreSQL evidence identifies the
-actual version used. Stable release requires successful supported-target CI,
-satisfiable package dependencies and review of deployment/retention choices.
+The supported-target CI jobs passed as recorded above. Stable release still
+requires satisfiable published package dependencies and review of deployment
+and retention choices; this development change creates no release tag.
 
 `componenta/queue-cycle` targets `componenta/queue:^1.0`; publish or otherwise
 provide the real compatible core version before releasing that package. No branch
