@@ -38,6 +38,49 @@ Its bootstrap loads the shared portable contract from the installed core, with
 no fallback to a monorepo vendor directory. The historical full matrix and
 performance evidence below refer to the original implementation commit.
 
+## Independent integration packages
+
+All five queue packages now have independent repositories and runtime manifests.
+The core and PostgreSQL source separation is described above. Console, App and
+CQRS implementations preserve the original core ports; none introduces a second
+queue worker or transport state machine.
+
+| Suite | Tests | Assertions | Main coverage |
+| --- | --- | --- | --- |
+| Core / in-memory / portable memory contract | 245 | 572 | Wire validation, retry decisions, ownership and failure transitions |
+| queue-cycle | 56 | 262 | Real PostgreSQL transactions, locks, process death, commit uncertainty and administration races |
+| queue-console | 43 | 191 | Lazy commands, limits, failure administration and actual process signals |
+| queue-app | 24 | 59 | Real App build/runtime maps, DI scope isolation, cleanup and reference safety |
+| cqrs-queue | 41 | 165 | Real CQRS dispatch, admission, original identity, uncertain publication recovery and synchronous completion |
+| Ecosystem consumer | 4 | 68 | All five packages together on real PostgreSQL, through source and prepared App composition |
+| **Distinct scenarios across suites** | **413** | **1,317** | Repeated platform-matrix runs are not added to this total |
+
+The independent review produced additional concrete regressions and fixes:
+
+- DI aliases/delegators could replace message runtime services; those bindings
+  are now rejected before constructing the scope.
+- A referenced dependency section could receive message-local services and retain
+  a completed scope; section slots are detached before runtime injection.
+- A structurally valid prepared map could omit or substitute explicit handler
+  bindings; its semantics are checked against current explicit configuration.
+- A CQRS pipeline returning no OperationResult could otherwise cause premature
+  acknowledgment; consumption now requires synchronous completion. A completed
+  OperationResult containing a null business value remains valid.
+- PHP numeric array-key conversion could reject a permitted destination label;
+  publisher maps now normalize numeric destination keys consistently.
+- A nested development vendor directory gave Pest the wrong project root. The
+  CQRS fixture uses Composer's public vendor-dir setting and verifies the actual
+  documented CI command.
+
+[Console CI run 46012663041](https://github.com/componenta/queue-console/actions/runs/46012663041)
+passed on Symfony Console **7.4.24 and 8.1.12**, with 43 tests / 191 assertions,
+maximum-level PHPStan and PSR-12 checks in each job.
+[Standalone Cycle CI run 46010762517](https://github.com/componenta/queue-cycle/actions/runs/46010762517)
+passed on PostgreSQL **16.16, 17.12 and 18.7**, each with 56 tests / 262 assertions.
+[Core separation CI run 46010663687](https://github.com/componenta/queue/actions/runs/46010663687)
+also passed. The package documents record the complete reproduction commands and
+reviewed dependency references.
+
 ## TDD and review evidence
 
 Tests were executed in the failing state before adding each behavior slice:

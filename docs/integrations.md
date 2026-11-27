@@ -10,6 +10,27 @@ Implementations live in independent repositories:
 [cqrs-queue](https://github.com/componenta/cqrs-queue).
 See each package's verification evidence for executed checks.
 
+## Implemented packages
+
+| Package | Public composition | Verification |
+| --- | --- | --- |
+| [queue-console](https://github.com/componenta/queue-console) | Lazy WorkCommand and failure administration factories; WorkerSession pairs receiver and core Worker; WorkerLoop owns monotonic limits and shutdown | Real SIGTERM/SIGINT during receive, handling and idle; Symfony 7.4/8.1 |
+| [queue-app](https://github.com/componenta/queue-app) | ConfigProvider; exact HandlerBinding/HandlerMap; ScopedMessageHandler with fresh DI lifetime and deferred owned cleanup; App 6 HandlersBuilder | Real source/prepared/warm composition, atomic generations, explicit route validation, per-message isolation and cleanup failures |
+| [cqrs-queue](https://github.com/componenta/cqrs-queue) | CommandRegistration/CommandRegistry; explicit CommandCodecInterface; allowlisted ContextHeaders; EnqueueMiddleware; QueueCommandHandler | Real CQRS bus/query integration, trusted synchronous completion, retained publication recovery, admission before decoding |
+
+The [ecosystem consumer](https://github.com/componenta/queue-app/tree/main/integration/ecosystem)
+installs all five queue packages together and tests App source/prepared composition,
+real PostgreSQL state transitions, Console orchestration, CQRS identity and
+per-message cleanup. It contains a separate Composer root, dependency lock and
+reviewed Git commit map; it does not add these integrations to core dependencies.
+
+The current App baseline is the unified build branch at
+[`15fd1d5`](https://github.com/componenta/app/commit/15fd1d5c561718f3c76a87b8952e430a08ede715),
+with DI [`e4f19ab`](https://github.com/componenta/di/commit/e4f19ab9a9f6bd18da85fc52c8d478433a32baec)
+and Config [`4685e71`](https://github.com/componenta/config/commit/4685e71d86500a7b51f4a773bb3022dd787fba7f).
+The older sources cited in the research section below describe the original
+comparison; current runtime verification uses the package fixtures' exact refs.
+
 ## Package boundaries
 
 | Package | Responsibility | Dependencies it must not acquire |
@@ -34,12 +55,12 @@ PHP `^8.5.13` is the project baseline, aligned with the inspected CQRS developme
 |---|---|---|
 | `psr/clock:^1.0` | Clock dependency where application timestamps are created | Inject the clock; do not obtain it from a container inside core services |
 | `psr/log:^3.0` | Optional operational logging through the core's configured logger | Logging failures must not change delivery disposition |
-| `cycle/database:^2.24` | `queue-cycle`, directly | Implemented against 2.24.0; validate the supported database matrix before release |
+| `cycle/database:^2.24` | `queue-cycle`, directly | Implemented against 2.24.0; independent CI passed PostgreSQL 16.16, 17.12 and 18.7 |
 | `componenta/clock:^1.2` | Optional application composition | `v1.2.0` exists and supports Config 3/4 |
 | `componenta/identity` | Application-side ID generation | Core accepts an ID and does not duplicate UUID generation |
-| `componenta/cqrs:^5.0` | New CQRS bridge | Target release; latest observed published CQRS tag is `v4.0.0` |
-| `componenta/app:^6.0` | App integration | Target release; latest observed published App tag is `v5.0.0` |
-| Config 4 / DI 6 | App integration when their APIs are used | Verify one installable dependency graph before releasing that integration |
+| `componenta/cqrs:^5.0` | New CQRS bridge | Implemented and tested on the reviewed CQRS 5 branch; published release compatibility remains a separate condition |
+| `componenta/app:^6.0` | App integration | Implemented and tested on the reviewed unified App 6 branch |
+| Config 4 / DI 6 | App integration when their APIs are used | One real development graph is installed and exercised by the package and ecosystem fixtures |
 
 These constraints do not block independent queue core development or release. An integration must not publish a stable package whose required compatible versions are unavailable. A development integration fixture may pin reviewed branches explicitly; production manifests must not hide this with aliases pretending an unreleased version is released.
 
