@@ -48,12 +48,12 @@ queue worker or transport state machine.
 | Suite | Tests | Assertions | Main coverage |
 | --- | --- | --- | --- |
 | Core / in-memory / portable memory contract | 245 | 572 | Wire validation, retry decisions, ownership and failure transitions |
-| queue-cycle | 56 | 262 | Real PostgreSQL transactions, locks, process death, commit uncertainty and administration races |
-| queue-console | 43 | 191 | Lazy commands, limits, failure administration and actual process signals |
-| queue-app | 24 | 59 | Real App build/runtime maps, DI scope isolation, cleanup and reference safety |
+| queue-cycle | 60 | 281 | Real PostgreSQL transactions, locks, process death, commit uncertainty, DateStyle and exact failure identity |
+| queue-console | 47 | 201 | Lazy commands, limits, failure administration, actual process signals and strict output identity |
+| queue-app | 25 | 63 | Real App build/runtime maps, DI scope isolation, cleanup and reference safety |
 | cqrs-queue | 41 | 165 | Real CQRS dispatch, admission, original identity, uncertain publication recovery and synchronous completion |
 | Ecosystem consumer | 4 | 68 | All five packages together on real PostgreSQL, through source and prepared App composition |
-| **Distinct scenarios across suites** | **413** | **1,317** | Repeated platform-matrix runs are not added to this total |
+| **Distinct scenarios across suites** | **422** | **1,350** | Repeated platform-matrix runs are not added to this total |
 
 The independent review produced additional concrete regressions and fixes:
 
@@ -71,6 +71,37 @@ The independent review produced additional concrete regressions and fixes:
 - A nested development vendor directory gave Pest the wrong project root. The
   CQRS fixture uses Composer's public vendor-dir setting and verifies the actual
   documented CI command.
+
+### Follow-up audit
+
+A further independent review reproduced five additional defects before applying
+the corresponding fixes:
+
+- A PostgreSQL session using `DateStyle = 'SQL, DMY'` broke timestamp reads.
+  Adapter-owned transactions now select ISO/YMD locally in their existing
+  settings statement. Commit and rollback restore the original setting, and
+  transactional staging preserves the caller's settings.
+- PDO's text parameter handling could truncate a failure ID at NUL and target
+  an existing prefix. Such an impossible PostgreSQL text ID now follows the
+  not-found contract; the original record remains unchanged.
+- A destructor invoked when releasing a cleanup callback's captured object
+  could skip remaining callbacks and replace the handler error. Explicit,
+  guarded callback release preserves both errors and completes cleanup.
+- A signal received before Symfony input validation failed could persist into
+  the next invocation of the same command. Stop state is now finalized around
+  the complete command invocation, including pre-execution failures.
+- Lossy UTF-8 replacement in Console JSON could change an opaque failure ID or
+  continuation cursor. Invalid output now fails before a successful record is
+  printed; error diagnostics remain valid JSON even for a byte-oriented PHP
+  exception class name.
+
+All affected full suites passed locally, as did maximum-level PHPStan and PSR-12
+checks. The all-package PostgreSQL consumer again passed all four scenarios and
+68 assertions with App's updated unified-build commit `d2c1a5a`. The table above
+records these post-review totals. Earlier CI confirmations below remain tied to
+their original commits and test counts.
+
+### Earlier hosted runs
 
 [Console CI run 46012663041](https://github.com/componenta/queue-console/actions/runs/46012663041)
 passed on Symfony Console **7.4.24 and 8.1.12**, with 43 tests / 191 assertions,

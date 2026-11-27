@@ -76,6 +76,10 @@ and microseconds, without a floating-point epoch conversion. Durations are integ
 milliseconds. Reject negative values, unsupported ranges, and timestamp or
 arithmetic overflow; do not clamp or round silently.
 
+Adapter-owned transactions use transaction-local `DateStyle = 'ISO, YMD'` so
+timestamp reads remain unambiguous under other session defaults. Commit and
+rollback restore the caller's setting; transactional staging preserves it.
+
 PSR-20 clocks may create application message timestamps. Worker elapsed-time
 limits use a monotonic process clock. Neither replaces database time for leases.
 `CURRENT_TIMESTAMP` and `now()` identify transaction start in PostgreSQL;

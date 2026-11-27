@@ -25,7 +25,7 @@ per-message cleanup. It contains a separate Composer root, dependency lock and
 reviewed Git commit map; it does not add these integrations to core dependencies.
 
 The current App baseline is the unified build branch at
-[`15fd1d5`](https://github.com/componenta/app/commit/15fd1d5c561718f3c76a87b8952e430a08ede715),
+[`d2c1a5a`](https://github.com/componenta/app/commit/d2c1a5a0b41a343dcb408e165986203e1179e712),
 with DI [`e4f19ab`](https://github.com/componenta/di/commit/e4f19ab9a9f6bd18da85fc52c8d478433a32baec)
 and Config [`4685e71`](https://github.com/componenta/config/commit/4685e71d86500a7b51f4a773bb3022dd787fba7f).
 The older sources cited in the research section below describe the original
