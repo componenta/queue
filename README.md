@@ -130,6 +130,11 @@ is useful for deterministic tests and examples; persistent work belongs in the
 PostgreSQL adapter. `Testing\RecordingPublisher` is a capacity-bounded publication
 spy that also exercises the configured codec. It does not deliver messages.
 
+If a memory poll cannot read its clock or prepare a later reservation, it leaves
+earlier exhausted messages unchanged. Bounded failure maintenance is applied
+only after the poll's fallible preparation succeeds, preserving the no-effect
+meaning of its rejection errors.
+
 ## Guarantees and operating boundaries
 
 The PostgreSQL profile provides atomic local transitions, fenced reservations,

@@ -95,12 +95,16 @@ final class Store
     public function claim(Session $session): ?DeliveryState
     {
         $visits = min($this->candidates->count(), self::MAX_CANDIDATES_PER_POLL);
+        $visitedEntries = [];
+        $pendingFailures = [];
+        $failureSequence = $this->failureSequence;
 
-        for ($visited = 0; $visited < $visits; ++$visited) {
-            $entry = $this->candidates->dequeue();
-            $entry->queued = false;
+        try {
+            for ($visited = 0; $visited < $visits; ++$visited) {
+                $entry = $this->candidates->dequeue();
+                $entry->queued = false;
+                $visitedEntries[] = $entry;
 
-            try {
                 $now = $this->now();
                 $eligible = ($entry->status === EntryStatus::Ready && $entry->availableAt <= $now)
                     || ($entry->status === EntryStatus::Leased && $entry->leaseUntil !== null && $entry->leaseUntil <= $now);
@@ -110,7 +114,8 @@ final class Store
                 }
 
                 if ($entry->deliveryCount >= $this->maxDeliveries) {
-                    $this->fail($entry, new FailureDetails(FailureReason::DeliveryLimit), $now);
+                    $failureSequence = Time::increment($failureSequence);
+                    $pendingFailures[] = $this->prepareFailure($entry, new FailureDetails(FailureReason::DeliveryLimit), $now, $failureSequence);
                     continue;
                 }
 
@@ -121,6 +126,10 @@ final class Store
                 $metadata = new DeliveryMetadata($this->queue, $entry->retryCount, $deliveryCount, CountAccuracy::Exact, $now);
                 $state = new DeliveryState($this, $session, $entry, $token, $entry->raw, $metadata);
 
+                // A failed poll must not expose maintenance from earlier candidates.
+                foreach ($pendingFailures as $record) {
+                    $this->commitFailure($record);
+                }
                 $entry->status = EntryStatus::Leased;
                 $entry->deliveryCount = $deliveryCount;
                 $entry->lifetimeDeliveries = $lifetimeDeliveries;
@@ -129,12 +138,18 @@ final class Store
                 $entry->token = $token;
 
                 return $state;
-            } finally {
+            }
+
+            foreach ($pendingFailures as $record) {
+                $this->commitFailure($record);
+            }
+
+            return null;
+        } finally {
+            foreach ($visitedEntries as $entry) {
                 $this->queueIfActive($entry);
             }
         }
-
-        return null;
     }
 
     public function ownedNow(Entry $entry, object $token): DateTimeImmutable
@@ -176,6 +191,11 @@ final class Store
     public function fail(Entry $entry, FailureDetails $details, DateTimeImmutable $now): void
     {
         $sequence = Time::increment($this->failureSequence);
+        $this->commitFailure($this->prepareFailure($entry, $details, $now, $sequence));
+    }
+
+    private function prepareFailure(Entry $entry, FailureDetails $details, DateTimeImmutable $now, int $sequence): FailureRecord
+    {
         $id = $this->scope.'-'.$sequence;
         $metadata = new DeliveryMetadata(
             $this->queue,
@@ -184,12 +204,16 @@ final class Store
             CountAccuracy::Exact,
             $entry->receivedAt,
         );
-        $record = new FailureRecord($id, $sequence, $entry, $entry->generation, $metadata, $details, $now);
+        return new FailureRecord($id, $sequence, $entry, $entry->generation, $metadata, $details, $now);
+    }
 
-        $this->failures[$id] = $record;
-        $this->failureSequence = $sequence;
+    private function commitFailure(FailureRecord $record): void
+    {
+        $this->failures[$record->id] = $record;
+        $this->failureSequence = $record->sequence;
+        $entry = $record->entry;
         $entry->status = EntryStatus::Failed;
-        $entry->failureId = $id;
+        $entry->failureId = $record->id;
         $entry->token = null;
         $entry->leaseUntil = null;
     }
