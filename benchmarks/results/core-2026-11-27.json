@@ -1,0 +1,773 @@
+{
+  "date": "2026-11-27",
+  "php": "8.5.13",
+  "phpbench": "1.7.1",
+  "cli_opcache": false,
+  "xdebug": false,
+  "final_source_fingerprint_sha256": "b9ec7f5184e2e91ababc85e4053a88f94873823f16d5721086bd90c5d9daecc1",
+  "fingerprint_boundary": "Sorted src/**/*.php, benchmarks/*.php and composer.lock; concatenate UTF-8 relative path, NUL, bytes, NUL.",
+  "initial_before_string_scanner_optimization": [
+    {
+      "benchmark": "\\Componenta\\Queue\\Benchmarks\\CoreBench",
+      "subject": "benchEncode",
+      "set": "small",
+      "revolutions": 100,
+      "iterations": [
+        {
+          "microseconds_per_revolution": 2.59,
+          "peak_memory_bytes": 2064816
+        },
+        {
+          "microseconds_per_revolution": 2.64,
+          "peak_memory_bytes": 2064816
+        },
+        {
+          "microseconds_per_revolution": 1.92,
+          "peak_memory_bytes": 2064816
+        },
+        {
+          "microseconds_per_revolution": 1.95,
+          "peak_memory_bytes": 2064816
+        },
+        {
+          "microseconds_per_revolution": 1.94,
+          "peak_memory_bytes": 2064816
+        }
+      ],
+      "statistics_microseconds": {
+        "max": 2.64,
+        "mean": 2.208,
+        "min": 1.92,
+        "mode": 1.9594520547945,
+        "stdev": 0.33283028708337,
+        "sum": 11.04,
+        "variance": 0.110776
+      },
+      "relative_standard_deviation_percent": 15.073835465732
+    },
+    {
+      "benchmark": "\\Componenta\\Queue\\Benchmarks\\CoreBench",
+      "subject": "benchEncode",
+      "set": "large",
+      "revolutions": 100,
+      "iterations": [
+        {
+          "microseconds_per_revolution": 67.17,
+          "peak_memory_bytes": 2342096
+        },
+        {
+          "microseconds_per_revolution": 64.96,
+          "peak_memory_bytes": 2342096
+        },
+        {
+          "microseconds_per_revolution": 66.18,
+          "peak_memory_bytes": 2342096
+        },
+        {
+          "microseconds_per_revolution": 60.19,
+          "peak_memory_bytes": 2342096
+        },
+        {
+          "microseconds_per_revolution": 67.96,
+          "peak_memory_bytes": 2342096
+        }
+      ],
+      "statistics_microseconds": {
+        "max": 67.96,
+        "mean": 65.292,
+        "min": 60.19,
+        "mode": 66.561095890411,
+        "stdev": 2.7413237678173,
+        "sum": 326.46,
+        "variance": 7.514856
+      },
+      "relative_standard_deviation_percent": 4.1985599580612
+    },
+    {
+      "benchmark": "\\Componenta\\Queue\\Benchmarks\\CoreBench",
+      "subject": "benchDecode",
+      "set": "small",
+      "revolutions": 100,
+      "iterations": [
+        {
+          "microseconds_per_revolution": 26.83,
+          "peak_memory_bytes": 2064816
+        },
+        {
+          "microseconds_per_revolution": 26.74,
+          "peak_memory_bytes": 2064816
+        },
+        {
+          "microseconds_per_revolution": 23.15,
+          "peak_memory_bytes": 2064816
+        },
+        {
+          "microseconds_per_revolution": 28.71,
+          "peak_memory_bytes": 2064816
+        },
+        {
+          "microseconds_per_revolution": 24.49,
+          "peak_memory_bytes": 2064816
+        }
+      ],
+      "statistics_microseconds": {
+        "max": 28.71,
+        "mean": 25.984,
+        "min": 23.15,
+        "mode": 26.653561643835,
+        "stdev": 1.9484311637828,
+        "sum": 129.92,
+        "variance": 3.796384
+      },
+      "relative_standard_deviation_percent": 7.4985805256419
+    },
+    {
+      "benchmark": "\\Componenta\\Queue\\Benchmarks\\CoreBench",
+      "subject": "benchDecode",
+      "set": "large",
+      "revolutions": 100,
+      "iterations": [
+        {
+          "microseconds_per_revolution": 2724.26,
+          "peak_memory_bytes": 2433176
+        },
+        {
+          "microseconds_per_revolution": 3000.65,
+          "peak_memory_bytes": 2433176
+        },
+        {
+          "microseconds_per_revolution": 3040.95,
+          "peak_memory_bytes": 2433176
+        },
+        {
+          "microseconds_per_revolution": 2877.33,
+          "peak_memory_bytes": 2433176
+        },
+        {
+          "microseconds_per_revolution": 2582.32,
+          "peak_memory_bytes": 2433176
+        }
+      ],
+      "statistics_microseconds": {
+        "max": 3040.95,
+        "mean": 2845.102,
+        "min": 2582.32,
+        "mode": 2938.6333268101,
+        "stdev": 171.60852652476,
+        "sum": 14225.51,
+        "variance": 29449.486376
+      },
+      "relative_standard_deviation_percent": 6.0317178971004
+    },
+    {
+      "benchmark": "\\Componenta\\Queue\\Benchmarks\\CoreBench",
+      "subject": "benchValidateHeaders",
+      "set": "small",
+      "revolutions": 100,
+      "iterations": [
+        {
+          "microseconds_per_revolution": 0.54,
+          "peak_memory_bytes": 2064832
+        },
+        {
+          "microseconds_per_revolution": 0.52,
+          "peak_memory_bytes": 2064832
+        },
+        {
+          "microseconds_per_revolution": 0.51,
+          "peak_memory_bytes": 2064832
+        },
+        {
+          "microseconds_per_revolution": 0.51,
+          "peak_memory_bytes": 2064832
+        },
+        {
+          "microseconds_per_revolution": 0.53,
+          "peak_memory_bytes": 2064832
+        }
+      ],
+      "statistics_microseconds": {
+        "max": 0.54,
+        "mean": 0.522,
+        "min": 0.51,
+        "mode": 0.51551859099804,
+        "stdev": 0.011661903789691,
+        "sum": 2.61,
+        "variance": 0.000136
+      },
+      "relative_standard_deviation_percent": 2.2340811857645
+    },
+    {
+      "benchmark": "\\Componenta\\Queue\\Benchmarks\\CoreBench",
+      "subject": "benchValidateHeaders",
+      "set": "large",
+      "revolutions": 100,
+      "iterations": [
+        {
+          "microseconds_per_revolution": 0.51,
+          "peak_memory_bytes": 2146976
+        },
+        {
+          "microseconds_per_revolution": 0.52,
+          "peak_memory_bytes": 2146976
+        },
+        {
+          "microseconds_per_revolution": 0.52,
+          "peak_memory_bytes": 2146976
+        },
+        {
+          "microseconds_per_revolution": 0.91,
+          "peak_memory_bytes": 2146976
+        },
+        {
+          "microseconds_per_revolution": 0.52,
+          "peak_memory_bytes": 2146976
+        }
+      ],
+      "statistics_microseconds": {
+        "max": 0.91,
+        "mean": 0.596,
+        "min": 0.51,
+        "mode": 0.51861056751468,
+        "stdev": 0.1570477634352,
+        "sum": 2.98,
+        "variance": 0.024664
+      },
+      "relative_standard_deviation_percent": 26.35029587839
+    },
+    {
+      "benchmark": "\\Componenta\\Queue\\Benchmarks\\CoreBench",
+      "subject": "benchCappedBackoff",
+      "set": "small",
+      "revolutions": 100,
+      "iterations": [
+        {
+          "microseconds_per_revolution": 0.59,
+          "peak_memory_bytes": 2064832
+        },
+        {
+          "microseconds_per_revolution": 0.46,
+          "peak_memory_bytes": 2064832
+        },
+        {
+          "microseconds_per_revolution": 0.45,
+          "peak_memory_bytes": 2064832
+        },
+        {
+          "microseconds_per_revolution": 0.46,
+          "peak_memory_bytes": 2064832
+        },
+        {
+          "microseconds_per_revolution": 0.44,
+          "peak_memory_bytes": 2064832
+        }
+      ],
+      "statistics_microseconds": {
+        "max": 0.59,
+        "mean": 0.48,
+        "min": 0.44,
+        "mode": 0.45291585127202,
+        "stdev": 0.055497747702046,
+        "sum": 2.4,
+        "variance": 0.00308
+      },
+      "relative_standard_deviation_percent": 11.56203077126
+    },
+    {
+      "benchmark": "\\Componenta\\Queue\\Benchmarks\\CoreBench",
+      "subject": "benchCappedBackoff",
+      "set": "large",
+      "revolutions": 100,
+      "iterations": [
+        {
+          "microseconds_per_revolution": 0.46,
+          "peak_memory_bytes": 2146976
+        },
+        {
+          "microseconds_per_revolution": 0.45,
+          "peak_memory_bytes": 2146976
+        },
+        {
+          "microseconds_per_revolution": 0.45,
+          "peak_memory_bytes": 2146976
+        },
+        {
+          "microseconds_per_revolution": 0.45,
+          "peak_memory_bytes": 2146976
+        },
+        {
+          "microseconds_per_revolution": 0.45,
+          "peak_memory_bytes": 2146976
+        }
+      ],
+      "statistics_microseconds": {
+        "max": 0.46,
+        "mean": 0.452,
+        "min": 0.45,
+        "mode": 0.45001956947162,
+        "stdev": 0.004,
+        "sum": 2.26,
+        "variance": 1.6e-05
+      },
+      "relative_standard_deviation_percent": 0.88495575221239
+    },
+    {
+      "benchmark": "\\Componenta\\Queue\\Benchmarks\\RegistryBench",
+      "subject": "benchExactAliasDispatch",
+      "set": "",
+      "revolutions": 1000,
+      "iterations": [
+        {
+          "microseconds_per_revolution": 0.165,
+          "peak_memory_bytes": 2064408
+        },
+        {
+          "microseconds_per_revolution": 0.169,
+          "peak_memory_bytes": 2064408
+        },
+        {
+          "microseconds_per_revolution": 0.172,
+          "peak_memory_bytes": 2064408
+        },
+        {
+          "microseconds_per_revolution": 0.165,
+          "peak_memory_bytes": 2064408
+        },
+        {
+          "microseconds_per_revolution": 0.164,
+          "peak_memory_bytes": 2064408
+        }
+      ],
+      "statistics_microseconds": {
+        "max": 0.172,
+        "mean": 0.167,
+        "min": 0.164,
+        "mode": 0.16512720156556,
+        "stdev": 0.0030331501776206,
+        "sum": 0.835,
+        "variance": 9.2e-06
+      },
+      "relative_standard_deviation_percent": 1.8162575913896
+    },
+    {
+      "benchmark": "\\Componenta\\Queue\\Benchmarks\\MemoryRoundTripBench",
+      "subject": "benchPublishAndProcess",
+      "set": "",
+      "revolutions": 100,
+      "iterations": [
+        {
+          "microseconds_per_revolution": 77.92,
+          "peak_memory_bytes": 2401176
+        },
+        {
+          "microseconds_per_revolution": 78.55,
+          "peak_memory_bytes": 2401176
+        },
+        {
+          "microseconds_per_revolution": 79.91,
+          "peak_memory_bytes": 2401176
+        },
+        {
+          "microseconds_per_revolution": 75.62,
+          "peak_memory_bytes": 2401176
+        },
+        {
+          "microseconds_per_revolution": 75.98,
+          "peak_memory_bytes": 2401176
+        }
+      ],
+      "statistics_microseconds": {
+        "max": 79.91,
+        "mean": 77.596,
+        "min": 75.62,
+        "mode": 78.046242661447,
+        "stdev": 1.6053485602822,
+        "sum": 387.98,
+        "variance": 2.577144
+      },
+      "relative_standard_deviation_percent": 2.0688547866928
+    }
+  ],
+  "final": [
+    {
+      "benchmark": "\\Componenta\\Queue\\Benchmarks\\CoreBench",
+      "subject": "benchEncode",
+      "set": "small",
+      "revolutions": 100,
+      "iterations": [
+        {
+          "microseconds_per_revolution": 1.95,
+          "peak_memory_bytes": 2119920
+        },
+        {
+          "microseconds_per_revolution": 2.01,
+          "peak_memory_bytes": 2119920
+        },
+        {
+          "microseconds_per_revolution": 1.96,
+          "peak_memory_bytes": 2119920
+        },
+        {
+          "microseconds_per_revolution": 1.95,
+          "peak_memory_bytes": 2119920
+        },
+        {
+          "microseconds_per_revolution": 2.16,
+          "peak_memory_bytes": 2119920
+        }
+      ],
+      "statistics_microseconds": {
+        "max": 2.16,
+        "mean": 2.006,
+        "min": 1.95,
+        "mode": 1.9660273972603,
+        "stdev": 0.080149859638056,
+        "sum": 10.03,
+        "variance": 0.006424
+      },
+      "relative_standard_deviation_percent": 3.9955064625152
+    },
+    {
+      "benchmark": "\\Componenta\\Queue\\Benchmarks\\CoreBench",
+      "subject": "benchEncode",
+      "set": "large",
+      "revolutions": 100,
+      "iterations": [
+        {
+          "microseconds_per_revolution": 58.45,
+          "peak_memory_bytes": 2398736
+        },
+        {
+          "microseconds_per_revolution": 68.29,
+          "peak_memory_bytes": 2398736
+        },
+        {
+          "microseconds_per_revolution": 68.72,
+          "peak_memory_bytes": 2398736
+        },
+        {
+          "microseconds_per_revolution": 60.22,
+          "peak_memory_bytes": 2398736
+        },
+        {
+          "microseconds_per_revolution": 65.51,
+          "peak_memory_bytes": 2398736
+        }
+      ],
+      "statistics_microseconds": {
+        "max": 68.72,
+        "mean": 64.238,
+        "min": 58.45,
+        "mode": 67.051878669276,
+        "stdev": 4.1897560788189,
+        "sum": 321.19,
+        "variance": 17.554056
+      },
+      "relative_standard_deviation_percent": 6.5222392957734
+    },
+    {
+      "benchmark": "\\Componenta\\Queue\\Benchmarks\\CoreBench",
+      "subject": "benchDecode",
+      "set": "small",
+      "revolutions": 100,
+      "iterations": [
+        {
+          "microseconds_per_revolution": 11.06,
+          "peak_memory_bytes": 2119920
+        },
+        {
+          "microseconds_per_revolution": 10.25,
+          "peak_memory_bytes": 2119920
+        },
+        {
+          "microseconds_per_revolution": 10.13,
+          "peak_memory_bytes": 2119920
+        },
+        {
+          "microseconds_per_revolution": 10.41,
+          "peak_memory_bytes": 2119920
+        },
+        {
+          "microseconds_per_revolution": 10.55,
+          "peak_memory_bytes": 2119920
+        }
+      ],
+      "statistics_microseconds": {
+        "max": 11.06,
+        "mean": 10.48,
+        "min": 10.13,
+        "mode": 10.339295499022,
+        "stdev": 0.32298606781098,
+        "sum": 52.4,
+        "variance": 0.10432
+      },
+      "relative_standard_deviation_percent": 3.0819281279674
+    },
+    {
+      "benchmark": "\\Componenta\\Queue\\Benchmarks\\CoreBench",
+      "subject": "benchDecode",
+      "set": "large",
+      "revolutions": 100,
+      "iterations": [
+        {
+          "microseconds_per_revolution": 210.94,
+          "peak_memory_bytes": 2489816
+        },
+        {
+          "microseconds_per_revolution": 221.82,
+          "peak_memory_bytes": 2489816
+        },
+        {
+          "microseconds_per_revolution": 190.55,
+          "peak_memory_bytes": 2489816
+        },
+        {
+          "microseconds_per_revolution": 316.87,
+          "peak_memory_bytes": 2489816
+        },
+        {
+          "microseconds_per_revolution": 201.06,
+          "peak_memory_bytes": 2489816
+        }
+      ],
+      "statistics_microseconds": {
+        "max": 316.87,
+        "mean": 228.248,
+        "min": 190.55,
+        "mode": 206.37090019569,
+        "stdev": 45.508398082112,
+        "sum": 1141.24,
+        "variance": 2071.014296
+      },
+      "relative_standard_deviation_percent": 19.938136624247
+    },
+    {
+      "benchmark": "\\Componenta\\Queue\\Benchmarks\\CoreBench",
+      "subject": "benchValidateHeaders",
+      "set": "small",
+      "revolutions": 100,
+      "iterations": [
+        {
+          "microseconds_per_revolution": 0.51,
+          "peak_memory_bytes": 2119936
+        },
+        {
+          "microseconds_per_revolution": 1.43,
+          "peak_memory_bytes": 2119936
+        },
+        {
+          "microseconds_per_revolution": 0.51,
+          "peak_memory_bytes": 2119936
+        },
+        {
+          "microseconds_per_revolution": 0.71,
+          "peak_memory_bytes": 2119936
+        },
+        {
+          "microseconds_per_revolution": 0.61,
+          "peak_memory_bytes": 2119936
+        }
+      ],
+      "statistics_microseconds": {
+        "max": 1.43,
+        "mean": 0.754,
+        "min": 0.51,
+        "mode": 0.58561643835616,
+        "stdev": 0.34604046006211,
+        "sum": 3.77,
+        "variance": 0.119744
+      },
+      "relative_standard_deviation_percent": 45.89396022044
+    },
+    {
+      "benchmark": "\\Componenta\\Queue\\Benchmarks\\CoreBench",
+      "subject": "benchValidateHeaders",
+      "set": "large",
+      "revolutions": 100,
+      "iterations": [
+        {
+          "microseconds_per_revolution": 0.52,
+          "peak_memory_bytes": 2203656
+        },
+        {
+          "microseconds_per_revolution": 0.75,
+          "peak_memory_bytes": 2203656
+        },
+        {
+          "microseconds_per_revolution": 0.51,
+          "peak_memory_bytes": 2203656
+        },
+        {
+          "microseconds_per_revolution": 0.53,
+          "peak_memory_bytes": 2203656
+        },
+        {
+          "microseconds_per_revolution": 0.52,
+          "peak_memory_bytes": 2203656
+        }
+      ],
+      "statistics_microseconds": {
+        "max": 0.75,
+        "mean": 0.566,
+        "min": 0.51,
+        "mode": 0.52033268101761,
+        "stdev": 0.092217135067188,
+        "sum": 2.83,
+        "variance": 0.008504
+      },
+      "relative_standard_deviation_percent": 16.292780047206
+    },
+    {
+      "benchmark": "\\Componenta\\Queue\\Benchmarks\\CoreBench",
+      "subject": "benchCappedBackoff",
+      "set": "small",
+      "revolutions": 100,
+      "iterations": [
+        {
+          "microseconds_per_revolution": 0.44,
+          "peak_memory_bytes": 2119936
+        },
+        {
+          "microseconds_per_revolution": 0.44,
+          "peak_memory_bytes": 2119936
+        },
+        {
+          "microseconds_per_revolution": 0.43,
+          "peak_memory_bytes": 2119936
+        },
+        {
+          "microseconds_per_revolution": 0.46,
+          "peak_memory_bytes": 2119936
+        },
+        {
+          "microseconds_per_revolution": 0.46,
+          "peak_memory_bytes": 2119936
+        }
+      ],
+      "statistics_microseconds": {
+        "max": 0.46,
+        "mean": 0.446,
+        "min": 0.43,
+        "mode": 0.43915851272016,
+        "stdev": 0.012,
+        "sum": 2.23,
+        "variance": 0.000144
+      },
+      "relative_standard_deviation_percent": 2.6905829596413
+    },
+    {
+      "benchmark": "\\Componenta\\Queue\\Benchmarks\\CoreBench",
+      "subject": "benchCappedBackoff",
+      "set": "large",
+      "revolutions": 100,
+      "iterations": [
+        {
+          "microseconds_per_revolution": 0.44,
+          "peak_memory_bytes": 2203656
+        },
+        {
+          "microseconds_per_revolution": 0.45,
+          "peak_memory_bytes": 2203656
+        },
+        {
+          "microseconds_per_revolution": 0.44,
+          "peak_memory_bytes": 2203656
+        },
+        {
+          "microseconds_per_revolution": 0.45,
+          "peak_memory_bytes": 2203656
+        },
+        {
+          "microseconds_per_revolution": 0.43,
+          "peak_memory_bytes": 2203656
+        }
+      ],
+      "statistics_microseconds": {
+        "max": 0.45,
+        "mean": 0.442,
+        "min": 0.43,
+        "mode": 0.44389432485323,
+        "stdev": 0.0074833147735479,
+        "sum": 2.21,
+        "variance": 5.6e-05
+      },
+      "relative_standard_deviation_percent": 1.6930576410742
+    },
+    {
+      "benchmark": "\\Componenta\\Queue\\Benchmarks\\RegistryBench",
+      "subject": "benchExactAliasDispatch",
+      "set": "",
+      "revolutions": 1000,
+      "iterations": [
+        {
+          "microseconds_per_revolution": 0.166,
+          "peak_memory_bytes": 2119512
+        },
+        {
+          "microseconds_per_revolution": 0.164,
+          "peak_memory_bytes": 2119512
+        },
+        {
+          "microseconds_per_revolution": 0.311,
+          "peak_memory_bytes": 2119512
+        },
+        {
+          "microseconds_per_revolution": 0.165,
+          "peak_memory_bytes": 2119512
+        },
+        {
+          "microseconds_per_revolution": 0.164,
+          "peak_memory_bytes": 2119512
+        }
+      ],
+      "statistics_microseconds": {
+        "max": 0.311,
+        "mean": 0.194,
+        "min": 0.164,
+        "mode": 0.16515068493151,
+        "stdev": 0.058504700665844,
+        "sum": 0.97,
+        "variance": 0.0034228
+      },
+      "relative_standard_deviation_percent": 30.157062198889
+    },
+    {
+      "benchmark": "\\Componenta\\Queue\\Benchmarks\\MemoryRoundTripBench",
+      "subject": "benchPublishAndProcess",
+      "set": "",
+      "revolutions": 100,
+      "iterations": [
+        {
+          "microseconds_per_revolution": 70.14,
+          "peak_memory_bytes": 2457824
+        },
+        {
+          "microseconds_per_revolution": 80.36,
+          "peak_memory_bytes": 2457824
+        },
+        {
+          "microseconds_per_revolution": 71.89,
+          "peak_memory_bytes": 2457824
+        },
+        {
+          "microseconds_per_revolution": 67.1,
+          "peak_memory_bytes": 2457824
+        },
+        {
+          "microseconds_per_revolution": 64.58,
+          "peak_memory_bytes": 2457824
+        }
+      ],
+      "statistics_microseconds": {
+        "max": 80.36,
+        "mean": 70.814,
+        "min": 64.58,
+        "mode": 68.687123287672,
+        "stdev": 5.3924895920159,
+        "sum": 354.07,
+        "variance": 29.078944
+      },
+      "relative_standard_deviation_percent": 7.6150049312508
+    }
+  ]
+}

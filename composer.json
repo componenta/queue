@@ -1,0 +1,50 @@
+{
+    "name": "componenta/queue",
+    "description": "Independent message queue contracts, processing and recovery for PHP.",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": "^8.5.13",
+        "ext-json": "*",
+        "psr/clock": "^1.0",
+        "psr/log": "^3.0"
+    },
+    "require-dev": {
+        "cycle/database": "^2.24",
+        "friendsofphp/php-cs-fixer": "^3.95",
+        "pestphp/pest": "^4.7",
+        "phpbench/phpbench": "^1.7",
+        "phpstan/phpstan": "^2.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Componenta\\Queue\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Componenta\\Queue\\Tests\\": "tests/",
+            "Componenta\\Queue\\Cycle\\": "packages/cycle/src/",
+            "Componenta\\Queue\\Cycle\\Tests\\": "packages/cycle/tests/"
+        }
+    },
+    "scripts": {
+        "test": "pest",
+        "analyse": "phpstan analyse --no-progress",
+        "bench": "phpbench run --report=aggregate",
+        "test:postgres": "pest --test-directory=packages/cycle/tests --configuration=packages/cycle/phpunit.xml",
+        "check": [
+            "@test",
+            "@analyse",
+            "@cs:check"
+        ],
+        "cs:check": "php-cs-fixer fix --dry-run --diff",
+        "cs:fix": "php-cs-fixer fix"
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        },
+        "sort-packages": true
+    }
+}
