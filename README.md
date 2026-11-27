@@ -1,52 +1,182 @@
 # Componenta Queue
 
-Design for an independent PHP message queue: immutable messages, explicit delivery
-ownership, bounded retries, durable failure capture and application integration.
+An independent PHP queue library with immutable messages, explicit delivery
+ownership, bounded retries and recoverable failed work. The core has no dependency
+on Componenta App, CQRS, a container, an ORM or a database driver.
 
 [Русский обзор](README.ru.md)
 
-## Design documents
+## Implementation status
+
+This repository now contains the queue core and the first PostgreSQL adapter.
+They are development source, with behavioral tests, a shared adapter contract
+suite, real PostgreSQL tests and phpbench subjects. No stable version has been
+tagged. [Implementation evidence](docs/implementation.md) distinguishes executed
+checks from release gates and planned integrations.
+
+| Package | Source | Purpose |
+| --- | --- | --- |
+| `componenta/queue` | `src/`, root `composer.json` | Message/codec contracts, Worker, handlers, retry policy, memory adapter and test publisher |
+| `componenta/queue-cycle` | `packages/cycle/`, its own `composer.json` | Persistent PostgreSQL queue using `cycle/database` |
+| Planned integrations | [Integration design](docs/integrations.md) | Console supervision, CQRS publication/consumption and App registration |
+
+The two implemented packages are colocated for development. Their runtime
+requirements remain separate: installing the core does not require Cycle or
+PostgreSQL. The root's development dependencies and autoloading run both packages'
+tests. The Cycle manifest targets core `^1.0`; it is not a claim that a 1.0 tag
+already exists.
+
+## Requirements and development
+
+The project baseline is PHP `^8.5.13`. The core uses `ext-json`, PSR-20 Clock and
+PSR-3 Log. The persistent profile requires 64-bit PHP, `pdo_pgsql`, Cycle Database `^2.24` and
+PostgreSQL 16 or newer with UTF-8 server/client encodings.
+
+In a development checkout:
+
+```sh
+composer install
+composer test
+composer analyse
+php examples/basic.php
+```
+
+`composer test` runs core, memory-adapter and portable-contract tests without a
+database. To run the persistent suite, point it explicitly at an isolated database
+whose test role may create/drop schemas:
+
+```sh
+export QUEUE_TEST_DSN='pgsql:host=127.0.0.1;port=5432;dbname=queue_conformance;connect_timeout=5'
+export QUEUE_TEST_USER='queue_test'
+export QUEUE_TEST_PASSWORD='queue_test'
+composer test:postgres
+```
+
+The tests use unique schemas and independent write connections. Missing database
+configuration fails explicitly. [The adapter README](packages/cycle/README.md)
+describes schema installation, staging, retention and connection requirements.
+
+## First message
+
+The complete runnable composition is [examples/basic.php](examples/basic.php).
+With a configured queue, codec and application handler, the public processing
+path is small:
+
+```php
+use Componenta\Queue\Message;
+use Componenta\Queue\MessageType;
+use Componenta\Queue\Retry\NoRetryPolicy;
+use Componenta\Queue\Worker;
+
+$queue->publisher()->publish(new Message(
+    id: 'notification-123',
+    type: new MessageType('notification.send', schemaVersion: 1),
+    body: 'Hello from Componenta Queue',
+));
+
+$receiver = $queue->receiver();
+$worker = new Worker($receiver, $codec, $handler, new NoRetryPolicy());
+
+try {
+    $result = $worker->processOne();
+} finally {
+    $receiver->close();
+}
+```
+
+The producer supplies a stable message ID. Preserve it when recovering an
+uncertain publication. Recreating an application operation with a new ID creates
+a different publication. Handlers receive `Message` and `ProcessingContext`;
+they return normally after success or throw. They can renew an available lease,
+but do not receive acknowledgment or rejection authority.
+
+`HandlerRegistry` optionally routes the exact message alias and schema version to
+an explicit `HandlerRegistration`. `CallbackHandler` adapts a callable. Unknown
+routes are permanent rejections; transported names never select arbitrary PHP
+classes.
+
+`processOne()` returns only a completed outcome:
+
+| Result | Meaning |
+| --- | --- |
+| `Idle` | No delivery was returned; the adapter may have performed bounded recovery work |
+| `Acknowledged` | The handler returned and acknowledgment succeeded |
+| `RetryScheduled` | The selected delayed retry was accepted |
+| `Failed` | The raw message and bounded failure details were captured |
+
+Infrastructure errors are exceptions. The Worker closes its receiver before
+propagating them and cannot be reused afterward. Create a fresh session for
+recovery. A handler failure followed by a policy/settlement failure retains both
+causes in `ProcessingException`, including an additional close failure.
+
+## Wire format and limits
+
+`JsonMessageCodec` takes explicit `MessageLimits` for body bytes, complete wire
+bytes, header bytes and JSON depth. It preserves arbitrary body bytes using
+canonical padded base64, checks the exact wire content type, rejects duplicate
+JSON members and validates the fixed versioned envelope. Application headers are
+immutable UTF-8 string maps. No PHP object serialization, executable class name,
+compression or implicit payload conversion is involved.
+
+Malformed input remains available as `RawMessage`. A decoder rejection is stored
+as a decode failure without invoking a handler. An unexpected codec or adapter
+failure remains an infrastructure error.
+
+## Retry, leases and failed work
+
+`NoRetryPolicy` is the explicit baseline. `LimitedRetryPolicy` requires a finite
+retry budget, an application classifier and `ExponentialBackoff`. Backoff uses a
+capped interval and full jitter; scheduling never sleeps inside the Worker.
+Scheduled retry count and native delivery count are separate. Adapter delivery
+budgets also cover reservations lost to process crashes.
+
+Successful business effects precede acknowledgment. If acknowledgment has an
+unknown outcome, the Worker does not attempt a different disposition. Any failed
+lease renewal is sticky for that processing step, even when the handler catches
+the exception. No later acknowledgment, retry or failure capture follows it.
+
+Failure stores expose bounded summary pages, individual raw snapshots, redrive
+and discard. Redriving the same failure with the same delay is idempotent while
+that history remains retained; conflicting redrive/discard requests fail
+explicitly. Redrive starts a new processing generation with fresh counters and
+preserves the logical message and raw content. Default diagnostic capture includes
+a category and exception type, without exception messages, traces, bodies or
+headers.
+
+The memory adapter is process-local and retains its history for its lifetime. It
+is useful for deterministic tests and examples; persistent work belongs in the
+PostgreSQL adapter. `Testing\RecordingPublisher` is a capacity-bounded publication
+spy that also exercises the configured codec. It does not deliver messages.
+
+## Guarantees and operating boundaries
+
+The PostgreSQL profile provides atomic local transitions, fenced reservations,
+strict lease expiry checked against database time, retained publication identity
+and transactional staging on the application's existing write connection.
+`TransactionalPublisher::stage()` does not commit the caller's transaction.
+Ordinary queue operations reject an unrelated open transaction.
+
+Application effects must tolerate redelivery. A queue transaction cannot make an
+external effect exactly once. Use an application inbox or an external service's
+idempotency key where that guarantee is required. The core does not install
+signals, supervise processes, interrupt arbitrary PHP handlers or promise global
+FIFO ordering. Configure delivery leases and supervisor shutdown grace for the
+actual workload.
+
+## Design and evidence
 
 | Document | Content |
 | --- | --- |
-| [Behavioral specification](docs/specification.md) | Public contracts, message/wire format, worker behavior, errors, ownership and guarantees |
-| [Cycle / PostgreSQL profile](docs/cycle-profile.md) | Atomic reservations and settlement, strict leases, deduplication, recovery, retention and transactional staging |
-| [Componenta integrations](docs/integrations.md) | CQRS bridge, dependency baseline, App preparation, Console lifecycle and migration |
-| [Verification and implementation plan](docs/verification.md) | Pest/TDD scenarios, real concurrency proof, phpbench methodology and ordered implementation slices |
-| [Research and design rationale](docs/research.md) | Symfony, Laravel, Spiral, RoadRunner, Enqueue, standards and primary sources |
+| [Behavioral specification](docs/specification.md) | Public contracts, wire format, ownership, outcome and error semantics |
+| [Cycle / PostgreSQL profile](docs/cycle-profile.md) | Durable transitions, strict leases, recovery, retention and staging |
+| [Implementation evidence](docs/implementation.md) | Delivered code, executed tests, measurements and remaining release gates |
+| [Verification plan](docs/verification.md) | Traceable core/database scenarios and implementation order |
+| [Componenta integrations](docs/integrations.md) | Planned CQRS, App and Console boundaries and dependency gates |
+| [Research](docs/research.md) | Source comparison, standards and rationale |
 
-The specification is ready to guide implementation of the core and its defined
-PostgreSQL profile. This repository currently contains the design and implementation
-plan; it does not contain a production queue runtime. PHP/database tests and
-benchmarks remain implementation acceptance gates.
-
-## Architecture
-
-- `componenta/queue` owns transport-neutral values, ports, a one-step worker and
-  retry/failure behavior. It has no CQRS, App, DI, Config or ORM dependency.
-- `componenta/queue-cycle` is the first durable adapter, directly using
-  `cycle/database`, with PostgreSQL 16+ as its initial conformance target.
-- `componenta/cqrs-queue` adapts asynchronous commands to the queue. Runtime
-  operations remain CQRS-owned; queries remain synchronous.
-- `componenta/queue-console` owns the process loop and signals;
-  `componenta/queue-app` owns framework registration and optional build artifacts.
-
-Package names other than this repository identify planned boundaries. The design
-does not claim those implementations or repositories already exist.
-
-## Key guarantees
-
-Message identity and delivery authority are different. Handler success precedes
-acknowledgment; failed or uncertain settlement never automatically causes the
-opposite disposition. Raw bytes remain available when decoding fails. Scheduling
-does not block a worker. The database profile uses current database time, strict
-lease checks and atomic transitions. Application side effects must tolerate
-redelivery; the library does not promise exactly-once business execution.
-
-PHP `^8.5.13` is the proposed Componenta baseline. Tests use Pest with meaningful
-behavioral and real PostgreSQL concurrency scenarios. Performance measurements use
-phpbench and separate committed database workloads. See the integration document
-for the release constraints of CQRS 5 and App 6.
+Run `composer bench` for local codec, registry, backoff and memory-round-trip
+subjects. These measurements are separate from committed database workloads and
+are not a database throughput claim.
 
 ## License
 

@@ -1,0 +1,6 @@
+parameters:
+    level: max
+    paths:
+        - src
+        - packages/cycle/src
+    tmpDir: .phpstan.cache

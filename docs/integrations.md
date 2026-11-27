@@ -1,6 +1,6 @@
 # Componenta integrations
 
-This document specifies integration boundaries for the proposed queue library. The [core specification](specification.md) owns public API names and delivery semantics; the [Cycle profile](cycle-profile.md) owns database guarantees. No production implementation or dependency upgrade is included in this design change.
+This document specifies integration boundaries for the proposed queue library. The [core specification](specification.md) owns public API names and delivery semantics; the [Cycle profile](cycle-profile.md) owns database guarantees. The core and Cycle adapter have implementation source; this document continues to describe the separate, unimplemented optional integration packages. See [implementation evidence](implementation.md) for delivered scope.
 
 ## Package boundaries
 
@@ -26,7 +26,7 @@ PHP `^8.5.13` is the project baseline, aligned with the inspected CQRS developme
 |---|---|---|
 | `psr/clock:^1.0` | Clock dependency where application timestamps are created | Inject the clock; do not obtain it from a container inside core services |
 | `psr/log:^3.0` | Optional operational logging through the core's configured logger | Logging failures must not change delivery disposition |
-| `cycle/database:^2.21` | `queue-cycle`, directly | Validate the actual adapter API and supported database versions during implementation |
+| `cycle/database:^2.24` | `queue-cycle`, directly | Implemented against 2.24.0; validate the supported database matrix before release |
 | `componenta/clock:^1.2` | Optional application composition | `v1.2.0` exists and supports Config 3/4 |
 | `componenta/identity` | Application-side ID generation | Core accepts an ID and does not duplicate UUID generation |
 | `componenta/cqrs:^5.0` | New CQRS bridge | Target release; latest observed published CQRS tag is `v4.0.0` |

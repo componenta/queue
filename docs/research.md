@@ -6,8 +6,8 @@ This document explains the evidence behind the proposed Componenta queue library
 The [specification](specification.md) is the authority for public contracts and
 observable behavior. The [Cycle profile](cycle-profile.md) defines the first
 database adapter, [integrations](integrations.md) defines package boundaries, and
-[verification](verification.md) defines implementation acceptance. This delivery
-contains a design, not an implemented or benchmarked queue runtime.
+[verification](verification.md) defines implementation acceptance. The research remains design rationale; [implementation evidence](implementation.md)
+records subsequent source changes, runtime tests and measurements.
 
 ## 1. Scope and selection criteria
 

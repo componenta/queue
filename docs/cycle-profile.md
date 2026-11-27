@@ -1,22 +1,23 @@
 # Cycle / PostgreSQL transport profile
 
 This document specifies the first persistent implementation of the contracts in
-[the library specification](specification.md). Requirements describe intended
-behavior; they are not claims that an implementation or conformance suite already
-exists. **MUST** and **MUST NOT** identify acceptance requirements for this profile.
+[the library specification](specification.md). Requirements are normative; [implementation evidence](implementation.md) records
+which conformance experiments have actually run. **MUST** and **MUST NOT** identify
+acceptance requirements for this profile.
 
 ## 1. Scope and dependencies
 
 The adapter package is `componenta/queue-cycle`. It requires PHP `^8.5.13`,
-`cycle/database ^2.21` directly, and the matching `componenta/queue` contracts.
+`cycle/database ^2.24` directly, and the matching `componenta/queue` contracts.
 Its first conformance target is **PostgreSQL 16 and later supported versions**.
 Cycle's other drivers do not establish MySQL or SQLite support. Each additional
 database requires its own concurrency design and conformance run.
 
 The adapter uses the database write connection for publication, reservations,
 settlement, renewal, failure management, and authoritative reads. Replica reads
-cannot establish current ownership or the result of an earlier write. Table names
-are installation configuration, not values derived from message headers.
+cannot establish current ownership or the result of an earlier write. The initial tables are `queue_messages` and `queue_failures` in the configured
+database schema; schema selection is trusted installation configuration, never
+a value derived from message headers.
 
 Core methods retain their transport-independent signatures:
 

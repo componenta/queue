@@ -2,9 +2,9 @@
 
 This is a derived plan for the behavior in [the specification](specification.md),
 [the Cycle profile](cycle-profile.md) and [integrations](integrations.md). It does
-not add alternative semantics. No PHP runtime, Pest suite, SQL integration test or
-benchmark was executed for this design delivery. Passing document checks is not
-evidence that a queue implementation is stable.
+not add alternative semantics. [Implementation evidence](implementation.md) records
+actual runtime tests and measurements separately from this acceptance plan. A
+scenario listed here is not, by itself, evidence that its experiment passed.
 
 ## 1. Test philosophy and evidence levels
 
@@ -24,7 +24,7 @@ control so a test cannot pass merely because the implementation rejects all work
 
 | Evidence | Establishes | Does not establish |
 | --- | --- | --- |
-| Recording publisher | Application chose the intended destination/message | Encoding, persistence, handler execution |
+| Recording publisher | Application selected the recorded message/delay; configured codec accepted encoding | Persistence, scheduling, handler execution |
 | Codec/value tests | Bytes, validation, immutable snapshots, deterministic encoding | Broker delivery or SQL concurrency |
 | In-memory conformance | Portable behavior and local delivery lifecycle | Persistence across processes or database locking |
 | Worker boundary tests | Outcome selection, invocation, settlement errors | Successful real database commits |
@@ -165,15 +165,15 @@ The specification establishes no numeric SLO. Establish a repeatable baseline
 before optimization. Accept an optimization only when the same behavioral and
 concurrency suite passes and a repeated measurement demonstrates its benefit.
 Source/prepared startup cost and steady-state handling cost are separate subjects.
-No benchmark result in this document is an observed measurement.
+Observed measurements are kept in [implementation evidence](implementation.md) and its linked baseline records, rather than inferred from this plan.
 
 ## 6. Ordered implementation slices
 
 Only the core and defined PostgreSQL profile are production implementation targets
 here. Optional integrations are designed, but their declared dependency versions
-must be resolved against real target sources before their release. Adapter
-repositories named below are proposed package boundaries, not claims that those
-repositories have already been created.
+must be resolved against real target sources before their release. The implemented Cycle package is colocated at `packages/cycle` with its own
+Composer manifest. Optional repository names below are package boundaries, not
+claims that those remote repositories have already been created.
 
 ### Slice 1 — One processable message
 

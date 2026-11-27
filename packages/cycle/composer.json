@@ -1,0 +1,18 @@
+{
+    "name": "componenta/queue-cycle",
+    "description": "Transactional PostgreSQL queue adapter for Componenta Queue using Cycle Database.",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": "^8.5.13",
+        "php-64bit": "^8.5.13",
+        "ext-pdo_pgsql": "*",
+        "componenta/queue": "^1.0",
+        "cycle/database": "^2.24"
+    },
+    "require-dev": {"pestphp/pest": "^4.7"},
+    "autoload": {"psr-4": {"Componenta\\Queue\\Cycle\\": "src/"}},
+    "autoload-dev": {"psr-4": {"Componenta\\Queue\\Cycle\\Tests\\": "tests/"}},
+    "scripts": {"test": "pest --test-directory=tests --configuration=phpunit.xml"},
+    "config": {"allow-plugins": {"pestphp/pest-plugin": true}, "sort-packages": true}
+}
