@@ -48,12 +48,12 @@ queue worker or transport state machine.
 | Suite | Tests | Assertions | Main coverage |
 | --- | --- | --- | --- |
 | Core / in-memory / portable memory contract | 245 | 572 | Wire validation, retry decisions, ownership and failure transitions |
-| queue-cycle | 60 | 281 | Real PostgreSQL transactions, locks, process death, commit uncertainty, DateStyle and exact failure identity |
+| queue-cycle | 62 | 287 | Real PostgreSQL transactions, locks, process death, commit uncertainty, DateStyle, exact failure identity and capability ownership |
 | queue-console | 47 | 201 | Lazy commands, limits, failure administration, actual process signals and strict output identity |
-| queue-app | 25 | 63 | Real App build/runtime maps, DI scope isolation, cleanup and reference safety |
-| cqrs-queue | 41 | 165 | Real CQRS dispatch, admission, original identity, uncertain publication recovery and synchronous completion |
+| queue-app | 29 | 71 | Real App build/runtime maps, DI scope isolation, cleanup, reference safety and declared runtime aliases |
+| cqrs-queue | 42 | 168 | Real CQRS dispatch, admission, original identity, uncertain publication recovery, preparation failures and synchronous completion |
 | Ecosystem consumer | 4 | 68 | All five packages together on real PostgreSQL, through source and prepared App composition |
-| **Distinct scenarios across suites** | **422** | **1,350** | Repeated platform-matrix runs are not added to this total |
+| **Distinct scenarios across suites** | **429** | **1,367** | Repeated platform-matrix runs are not added to this total |
 
 The independent review produced additional concrete regressions and fixes:
 
@@ -97,9 +97,33 @@ the corresponding fixes:
 
 All affected full suites passed locally, as did maximum-level PHPStan and PSR-12
 checks. The all-package PostgreSQL consumer again passed all four scenarios and
-68 assertions with App's updated unified-build commit `d2c1a5a`. The table above
-records these post-review totals. Earlier CI confirmations below remain tied to
-their original commits and test counts.
+68 assertions with App's updated unified-build commit `d2c1a5a`. Earlier CI
+confirmations below remain tied to their original commits and test counts.
+
+### Capability and publication-boundary audit
+
+A subsequent review reproduced three further defects through public APIs before
+applying the corresponding fixes:
+
+- Cloning a Cycle delivery copied its mutable state independently of its session.
+  The copy could acknowledge a reservation after the original receiver closed.
+  Cycle receivers and deliveries now reject cloning; both regression cases
+  retain successful acknowledgment through the original delivery as a control.
+- CQRS prepared the returned asynchronous operation after publishing. A custom
+  `OperationInterface` could throw during that derivation after the queue had
+  accepted the message. Derivation now precedes publication; its failure leaves
+  zero publications and preserves the original error. Existing recovery tests
+  still retain the exact message, delay and destination for publisher failures.
+- An already declared PHP class/interface alias could evade App's reserved
+  runtime-service guard. Declared names are now canonicalized without invoking
+  autoloading. Tests cover all three protected runtime services, an ordinary
+  application alias and an unresolved service ID that must not be autoloaded.
+
+All five full package suites passed, together with the four PostgreSQL ecosystem
+scenarios, for the totals in the table above. Maximum-level PHPStan passed for
+all packages; formatting checks passed for the changed PHP packages. No further
+confirmed defects were found in core or Console during this pass. The source and
+prepared ecosystem paths use the same reviewed App commit `d2c1a5a`.
 
 ### Earlier hosted runs
 
