@@ -10,7 +10,6 @@
         "psr/log": "^3.0"
     },
     "require-dev": {
-        "cycle/database": "^2.24",
         "friendsofphp/php-cs-fixer": "^3.95",
         "pestphp/pest": "^4.7",
         "phpbench/phpbench": "^1.7",
@@ -23,16 +22,13 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Componenta\\Queue\\Tests\\": "tests/",
-            "Componenta\\Queue\\Cycle\\": "packages/cycle/src/",
-            "Componenta\\Queue\\Cycle\\Tests\\": "packages/cycle/tests/"
+            "Componenta\\Queue\\Tests\\": "tests/"
         }
     },
     "scripts": {
         "test": "pest",
         "analyse": "phpstan analyse --no-progress",
         "bench": "phpbench run --report=aggregate",
-        "test:postgres": "pest --test-directory=packages/cycle/tests --configuration=packages/cycle/phpunit.xml",
         "check": [
             "@test",
             "@analyse",
@@ -46,5 +42,10 @@
             "pestphp/pest-plugin": true
         },
         "sort-packages": true
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "1.0.x-dev"
+        }
     }
 }

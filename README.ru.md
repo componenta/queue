@@ -6,18 +6,18 @@
 
 [English documentation](README.md)
 
-## Что реализовано
+## Пакеты
 
-| Часть | Расположение | Назначение |
-| --- | --- | --- |
-| `componenta/queue` | `src/` | Сообщения, кодек, контракты, Worker, маршрутизация обработчиков, retry, очередь в памяти и тестовый publisher |
-| `componenta/queue-cycle` | `packages/cycle/` | Постоянная очередь на PostgreSQL через Cycle Database |
-| Интеграции | `docs/integrations.md` | Отдельный проект для Console, CQRS и App; реализации пока нет |
+| Пакет | Назначение |
+| --- | --- |
+| `componenta/queue` | Сообщения, кодек, Worker, обработчики, retry, очередь в памяти и тестовый publisher |
+| [componenta/queue-cycle](https://github.com/componenta/queue-cycle) | Постоянная очередь на PostgreSQL через Cycle Database |
+| [componenta/queue-console](https://github.com/componenta/queue-console) | Цикл обработки, лимиты процесса, сигналы и управление ошибками |
+| [componenta/queue-app](https://github.com/componenta/queue-app) | Регистрация в App, подготовленные карты и отдельная область сервисов сообщения |
+| [componenta/cqrs-queue](https://github.com/componenta/cqrs-queue) | Публикация команд и синхронное выполнение через CQRS |
 
-Это исходный код в разработке, без стабильного тега. Пакеты находятся в одном
-репозитории, но имеют отдельные Composer-манифесты: PostgreSQL и Cycle не входят
-в зависимости ядра во время исполнения. Выполненные проверки и оставшиеся
-условия выпуска перечислены в [отчёте о реализации](docs/implementation.md).
+У каждого пакета отдельный репозиторий и Composer-манифест. Ядро устанавливается
+без базы данных, консольного приложения или фреймворка.
 
 ## Запуск
 
@@ -27,22 +27,15 @@
 composer install
 composer test
 composer analyse
+composer cs:check
 php examples/basic.php
 ```
 
 Последняя команда запускает полный пример публикации, выбора обработчика и
-подтверждения сообщения через очередь в памяти. Это пример без инфраструктуры;
-для постоянного хранения используется [адаптер PostgreSQL](packages/cycle/README.md).
-
-Тесты базы запускаются отдельно и требуют явного подключения к изолированной
-тестовой базе:
-
-```sh
-export QUEUE_TEST_DSN='pgsql:host=127.0.0.1;port=5432;dbname=queue_conformance;connect_timeout=5'
-export QUEUE_TEST_USER='queue_test'
-export QUEUE_TEST_PASSWORD='queue_test'
-composer test:postgres
-```
+подтверждения сообщения через очередь в памяти. Тесты PostgreSQL, схема и
+настройки постоянного хранения находятся в репозитории
+[queue-cycle](https://github.com/componenta/queue-cycle).
+Выполненные проверки описаны в [отчёте о реализации](docs/implementation.md).
 
 ## Основные решения
 

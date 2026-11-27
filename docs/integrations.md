@@ -1,6 +1,14 @@
 # Componenta integrations
 
-This document specifies integration boundaries for the proposed queue library. The [core specification](specification.md) owns public API names and delivery semantics; the [Cycle profile](cycle-profile.md) owns database guarantees. The core and Cycle adapter have implementation source; this document continues to describe the separate, unimplemented optional integration packages. See [implementation evidence](implementation.md) for delivered scope.
+This document specifies integration boundaries for the queue packages. The
+[core specification](specification.md) owns public API names and delivery
+semantics; the [Cycle profile](cycle-profile.md) owns database guarantees.
+Implementations live in independent repositories:
+[queue-cycle](https://github.com/componenta/queue-cycle),
+[queue-console](https://github.com/componenta/queue-console),
+[queue-app](https://github.com/componenta/queue-app) and
+[cqrs-queue](https://github.com/componenta/cqrs-queue).
+See each package's verification evidence for executed checks.
 
 ## Package boundaries
 

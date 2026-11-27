@@ -6,55 +6,37 @@ on Componenta App, CQRS, a container, an ORM or a database driver.
 
 [Русский обзор](README.ru.md)
 
-## Implementation status
+## Packages
 
-This repository now contains the queue core and the first PostgreSQL adapter.
-They are development source, with behavioral tests, a shared adapter contract
-suite, real PostgreSQL tests and phpbench subjects. No stable version has been
-tagged. [Implementation evidence](docs/implementation.md) distinguishes executed
-checks from release gates and planned integrations.
+Each integration has its own repository and Composer manifest. The core remains
+usable without a framework, database or console application.
 
-| Package | Source | Purpose |
-| --- | --- | --- |
-| `componenta/queue` | `src/`, root `composer.json` | Message/codec contracts, Worker, handlers, retry policy, memory adapter and test publisher |
-| `componenta/queue-cycle` | `packages/cycle/`, its own `composer.json` | Persistent PostgreSQL queue using `cycle/database` |
-| Planned integrations | [Integration design](docs/integrations.md) | Console supervision, CQRS publication/consumption and App registration |
-
-The two implemented packages are colocated for development. Their runtime
-requirements remain separate: installing the core does not require Cycle or
-PostgreSQL. The root's development dependencies and autoloading run both packages'
-tests. The Cycle manifest targets core `^1.0`; it is not a claim that a 1.0 tag
-already exists.
+| Package | Purpose |
+| --- | --- |
+| `componenta/queue` | Messages, codec, Worker, handlers, retry policy, memory adapter and test publisher |
+| [componenta/queue-cycle](https://github.com/componenta/queue-cycle) | Persistent PostgreSQL queue using Cycle Database |
+| [componenta/queue-console](https://github.com/componenta/queue-console) | Worker loop, process limits, signals and failure administration |
+| [componenta/queue-app](https://github.com/componenta/queue-app) | App registration, prepared handler maps and per-message service scope |
+| [componenta/cqrs-queue](https://github.com/componenta/cqrs-queue) | Explicit command publication and synchronous consumption through CQRS |
 
 ## Requirements and development
 
 The project baseline is PHP `^8.5.13`. The core uses `ext-json`, PSR-20 Clock and
-PSR-3 Log. The persistent profile requires 64-bit PHP, `pdo_pgsql`, Cycle Database `^2.24` and
-PostgreSQL 16 or newer with UTF-8 server/client encodings.
-
-In a development checkout:
+PSR-3 Log. In a development checkout:
 
 ```sh
 composer install
 composer test
 composer analyse
+composer cs:check
 php examples/basic.php
 ```
 
 `composer test` runs core, memory-adapter and portable-contract tests without a
-database. To run the persistent suite, point it explicitly at an isolated database
-whose test role may create/drop schemas:
-
-```sh
-export QUEUE_TEST_DSN='pgsql:host=127.0.0.1;port=5432;dbname=queue_conformance;connect_timeout=5'
-export QUEUE_TEST_USER='queue_test'
-export QUEUE_TEST_PASSWORD='queue_test'
-composer test:postgres
-```
-
-The tests use unique schemas and independent write connections. Missing database
-configuration fails explicitly. [The adapter README](packages/cycle/README.md)
-describes schema installation, staging, retention and connection requirements.
+database. The [PostgreSQL adapter](https://github.com/componenta/queue-cycle)
+contains its own real-database suite, schema installation, transactional staging,
+retention and connection guidance. [Implementation evidence](docs/implementation.md)
+records executed checks and the integration dependency baselines.
 
 ## First message
 
@@ -171,7 +153,7 @@ actual workload.
 | [Cycle / PostgreSQL profile](docs/cycle-profile.md) | Durable transitions, strict leases, recovery, retention and staging |
 | [Implementation evidence](docs/implementation.md) | Delivered code, executed tests, measurements and remaining release gates |
 | [Verification plan](docs/verification.md) | Traceable core/database scenarios and implementation order |
-| [Componenta integrations](docs/integrations.md) | Planned CQRS, App and Console boundaries and dependency gates |
+| [Componenta integrations](docs/integrations.md) | CQRS, App and Console boundaries and dependency baselines |
 | [Research](docs/research.md) | Source comparison, standards and rationale |
 
 Run `composer bench` for local codec, registry, backoff and memory-round-trip

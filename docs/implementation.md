@@ -15,13 +15,28 @@ already proven.
 | Policies | Exact handler registry; permanent rejection; finite retry budget; overflow-safe exponential interval and full jitter |
 | Memory transport | Publication, delay, reservation, fencing, retry, failure capture, pagination, redrive/discard; injected clock; bounded rotating polling |
 | Test publisher | Bounded publication records, real codec validation, immutable snapshots |
-| Persistent transport | Separate `packages/cycle` Composer package with schema, write-connection transactions, reservation and failure-store implementations |
+| Persistent transport | Independent [queue-cycle repository](https://github.com/componenta/queue-cycle) with schema, write-connection transactions, reservation and failure-store implementations |
 | Development | Pest, shared portable adapter contract, PHPStan max, phpbench, runnable plain-PHP example and CI configuration |
 
-The core runtime requires only PHP/JSON, PSR Clock and PSR Log. Cycle is a root
-**development** dependency for testing the separate adapter. Optional Console,
-App and CQRS packages have design documents, but no implementation in this change.
-No existing CQRS transport or application repository was modified.
+The core requires only PHP/JSON, PSR Clock and PSR Log. Cycle is no longer a core
+development dependency: the adapter owns its own dependency installation, real
+PostgreSQL suite and CI matrix. Independent Console, App and CQRS repositories
+are listed in [the integration document](integrations.md).
+
+## Repository separation
+
+The reviewed core PR was merged as `a90692fe8d62ffba9baa2002555e8ffdea413cf3`.
+The adapter source, SQL, tests, workload and historical measurements were moved
+to `componenta/queue-cycle`. Its development Composer root installs core as the
+explicit `1.0.x-dev` line; production constraints remain `^1.0`.
+
+After separation, core again passed **245 tests / 572 assertions**, maximum-level
+PHPStan, PSR-12 checks, strict Composer validation and the runnable example.
+The independently installed adapter passed **56 tests / 262 assertions** on
+PostgreSQL 17.12 (15.90 seconds), PHPStan max and its own formatting checks.
+Its bootstrap loads the shared portable contract from the installed core, with
+no fallback to a monorepo vendor directory. The historical full matrix and
+performance evidence below refer to the original implementation commit.
 
 ## TDD and review evidence
 
@@ -42,7 +57,7 @@ Independent review produced additional concrete regression checks:
 - Expired resolved history must not block later cleanup merely because a redriven
   generation is active. Cleanup preserves the newer work and makes bounded progress.
 
-## Executed checks
+## Original implementation checks
 
 The local execution environment uses PHP **8.5.13**, Pest **4.7.8**, PHPUnit
 **12.5.33**, PHPStan **2.3.7**, phpbench **1.7.1** and Cycle Database **2.24.0**.
@@ -140,11 +155,11 @@ requires satisfiable published package dependencies and review of deployment
 and retention choices; this development change creates no release tag.
 
 `componenta/queue-cycle` targets `componenta/queue:^1.0`; publish or otherwise
-provide the real compatible core version before releasing that package. No branch
-alias pretends that an unreleased version exists. App 6 and CQRS 5 integration
-dependency and build-mode gates remain in [integrations](integrations.md).
+provide the real compatible core version before releasing that package. Development branch aliases retain the `-dev` suffix; none represents a stable
+release. App 6 and CQRS 5 integration dependency baselines are recorded in
+[integrations](integrations.md).
 
 The core provides `processOne()`, not a production process supervisor. Signal
 handling, shutdown-loop tests and bounded administration commands belong to the
-planned Console package. Application inbox/authorization and external-side-effect
+independent [Console package](https://github.com/componenta/queue-console). Application inbox/authorization and external-side-effect
 idempotency belong to the application and are not established by these tests.
