@@ -2,7 +2,7 @@
 
 **Status:** this document is the normative contract for the implemented core and first PostgreSQL adapter. Executed tests, measurements and remaining release gates are recorded separately in [implementation evidence](implementation.md). Optional integrations retain the release constraints in [integrations](integrations.md).
 
-This document owns shared behavior. [The Cycle profile](cycle-profile.md) owns the stronger PostgreSQL guarantees. [Integrations](integrations.md) owns CQRS, App and Console composition. [Verification](verification.md) derives acceptance scenarios and implementation order. [Research](research.md) explains the external evidence and alternatives. PHP declarations below specify the public API shape; implementation is in `src/` and the separate `packages/cycle/` package.
+This document owns shared behavior. [The Cycle profile](cycle-profile.md) owns the stronger PostgreSQL guarantees. [Integrations](integrations.md) owns CQRS, App and Console composition. [Verification](verification.md) derives acceptance scenarios and implementation order. [Research](research.md) explains the external evidence and alternatives. PHP declarations below specify the public API shape; implementation is in `src/` and the separate [queue-cycle repository](https://github.com/componenta/queue-cycle).
 
 ## 1. Objective and scope
 

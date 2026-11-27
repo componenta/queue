@@ -47,13 +47,13 @@ queue worker or transport state machine.
 
 | Suite | Tests | Assertions | Main coverage |
 | --- | --- | --- | --- |
-| Core / in-memory / portable memory contract | 245 | 572 | Wire validation, retry decisions, ownership and failure transitions |
+| Core / in-memory / portable memory contract | 247 | 590 | Wire validation, retry decisions, ownership and atomic failure maintenance |
 | queue-cycle | 62 | 287 | Real PostgreSQL transactions, locks, process death, commit uncertainty, DateStyle, exact failure identity and capability ownership |
-| queue-console | 47 | 201 | Lazy commands, limits, failure administration, actual process signals and strict output identity |
+| queue-console | 51 | 221 | Lazy commands, limits, failure administration, actual process signals, application events and strict output identity |
 | queue-app | 29 | 71 | Real App build/runtime maps, DI scope isolation, cleanup, reference safety and declared runtime aliases |
 | cqrs-queue | 42 | 168 | Real CQRS dispatch, admission, original identity, uncertain publication recovery, preparation failures and synchronous completion |
 | Ecosystem consumer | 4 | 68 | All five packages together on real PostgreSQL, through source and prepared App composition |
-| **Distinct scenarios across suites** | **429** | **1,367** | Repeated platform-matrix runs are not added to this total |
+| **Distinct scenarios across suites** | **435** | **1,405** | Repeated platform-matrix runs are not added to this total |
 
 The independent review produced additional concrete regressions and fixes:
 
@@ -124,6 +124,32 @@ scenarios, for the totals in the table above. Maximum-level PHPStan passed for
 all packages; formatting checks passed for the changed PHP packages. No further
 confirmed defects were found in core or Console during this pass. The source and
 prepared ecosystem paths use the same reviewed App commit `d2c1a5a`.
+
+### Poll failure and Console event audit
+
+The next pass reproduced two additional defects through public dependencies:
+
+- In-memory receiving could capture an exhausted message, then reject the poll
+  when a later clock read or lease calculation failed. This contradicted the
+  no-effect outcome of `NotApplied` and unsupported-duration errors. Polling now
+  prepares failure records and the optional reservation before applying either;
+  rejected polls return all visited candidates without changing their state.
+  Two regressions cover clock failure and timestamp overflow, followed by
+  successful recovery through the same receiver. The 64-candidate maintenance
+  bound and multi-message progress remain unchanged.
+- Symfony can disable a command before `Command::run()` or dispatch an error
+  event after its `finally`, while signal handlers remain registered. A signal
+  at either point could stop the next invocation. A fresh signal subscription
+  now starts a fresh stop request outside an active run. Two regressions and
+  two positive controls verify early current-run signals and subscription
+  inspection during active handling through the actual Symfony Application.
+
+The resulting core suite passed **247 tests / 590 assertions**, and Console
+passed **51 tests / 221 assertions**. Maximum-level PHPStan and PSR-12 checks
+passed for both fixes. App and CQRS full suites and all four PostgreSQL ecosystem
+scenarios passed against the changed core. The independent Cycle review passed
+its full real-PostgreSQL suite and exact maximum-duration probes under differing
+TimeZone, IntervalStyle and DateStyle settings, with no further source changes.
 
 ### Earlier hosted runs
 

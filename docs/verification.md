@@ -169,11 +169,11 @@ Observed measurements are kept in [implementation evidence](implementation.md) a
 
 ## 6. Ordered implementation slices
 
-Only the core and defined PostgreSQL profile are production implementation targets
-here. Optional integrations are designed, but their declared dependency versions
-must be resolved against real target sources before their release. The implemented Cycle package is colocated at `packages/cycle` with its own
-Composer manifest. Optional repository names below are package boundaries, not
-claims that those remote repositories have already been created.
+These slices record the original implementation order. All five packages now
+have independent repositories and Composer manifests; the PostgreSQL adapter
+lives in [queue-cycle](https://github.com/componenta/queue-cycle). Current executed
+checks are recorded in [implementation evidence](implementation.md), and the
+integration packages document their exact development dependency baselines.
 
 ### Slice 1 — One processable message
 
